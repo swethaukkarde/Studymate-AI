@@ -3,4 +3,4 @@ google-genai
 streamlit
 pymupdf
 sentence-transformers
-chromadb==1.5.9
+chromadb==0.6.3
