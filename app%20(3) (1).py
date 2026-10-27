@@ -381,6 +381,30 @@ ANSWER:
                     client = genai.Client(
                         api_key=st.secrets["GEMINI_API_KEY"]
                     )
+                    preferred_models = [
+                        "gemini-3.8-flash",
+                        "gemini-2.5-flash",
+                        "gemini-2.0-flash"
+                    ]
+                    answer = ""
+                    errors = []
+                    for model_name in preferred_models:
+                        try:
+                            response = client.models.generate_content(
+                                model=model_name,
+                                contents=prompt
+                            )
+                            answer = (response.text or "").strip()
+                            if answer:
+                                break
+                        except Exception as model_error:
+                            errors.append(f"{model_name}: {model_error}")
+                            if not answer:
+                                st.error(
+                                    "Gemini models are temporarily unavailable. "
+                                    "Please try again later. Details: " + " | ".join(errors)
+                                )
+                                st.stop()
 
                     response = client.models.generate_content(
                         model="gemini-3.8-flash",
